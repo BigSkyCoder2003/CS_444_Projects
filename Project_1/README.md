@@ -1,7 +1,5 @@
 # Project 1: Multithreading  
 
-
-
 ## Building
 
 _[How to build the program. VS Code part is optional.]_
@@ -9,35 +7,26 @@ _[How to build the program. VS Code part is optional.]_
 Command line:
 
 * `make` to build. An executable called `hellothread` will be produced.
-* `make clean` to clean up all build products except the executable.
-* `make pristine` to clean up all build products entirely.
+* `make clean` to clean up all build products.
 
 ## Files
 
 _[List files here, even if you only have one. Headers are optional.]_
 
-* `hellothread.c`: The main code 
+* `hellothread.c`: The main project code 
 
 
 ## Data
 
-_[Description of the main data used in the program. Just list the major
-data structures—not every variable.]_
-
+This project uses integers to store identifiers for threads and as output data. all char data is self contained in output statements. 
 
 
 ## Functions
 
 _[This is a tree of functions and their short descriptions]_
 
-* 
-* 
-* 
+* `counter()` runs a counting and output loop 
+* `init_threads()` create threads
+* `join_threads()` join threads
+* `main()` main function for project
 
-## Notes
-
-_[Any additional notes, bugs, etc.]_
-
-* 
-* 
-* 
