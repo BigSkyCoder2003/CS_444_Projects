@@ -1,4 +1,5 @@
 # Project 2: Mutexes 
+Daniel Lounsbury
 ## Building
 
 Command line:
