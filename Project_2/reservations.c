@@ -10,43 +10,41 @@ int *seat_taken;  // Array of seats
 int transaction_count;
 
 int seat_taken_count = 0;
+pthread_mutex_t lock= PTHREAD_MUTEX_INITIALIZER;
+
 
 int reserve_seat(int n)
 {
-    // Attempt to reserve seat number n
-    //
-    // If the seat is already taken, return -1
-    // Otherwise mark the seat as taken and return 0
-    //
-    // This function should also increment seat_taken_count if the seat
-    // wasn't already taken.
-    
-    // TODO
-
-    return 0;  // Change as necessary--included so it will build
+  pthread_mutex_lock(&lock);
+    if (seat_taken[n]) {
+      pthread_mutex_unlock(&lock);
+      return -1;
+    } else {
+      seat_taken[n] = 1;
+      seat_taken_count++;
+      pthread_mutex_unlock(&lock);
+      return 0;
+    }
 }
 
 int free_seat(int n)
 {
-    // Attempt to free (unreserve) seat number n
-    //
-    // If the seat is already free, return -1
-    // Otherwise mark the seat as free and return 0
-    //
-    // This function should also decrement seat_taken_count if the seat
-    // wasn't already free.
-
-    // TODO
-
-    return 0;  // Change as necessary--included so it will build
+  pthread_mutex_lock(&lock);
+  if (!seat_taken[n]) {
+      pthread_mutex_unlock(&lock);
+      return -1;
+    } else {
+      seat_taken[n] = 0;
+      seat_taken_count--;
+      pthread_mutex_unlock(&lock);
+      return 0;
+    }
 }
-
 int is_free(int n) {
-    // Returns true if the given seat is available.
 
-    // TODO
-
-    return 0;  // Change as necessary--included so it will build
+    int free_status = !seat_taken[n];
+    return free_status;
+    
 }
 
 int verify_seat_count(void) {
@@ -61,14 +59,16 @@ int verify_seat_count(void) {
     // still work properly.
 
     int count = 0;
-
     // Count all the taken seats
+    pthread_mutex_lock(&lock);
     for (int i = 0; i < seat_count; i++)
         if (seat_taken[i])
             count++;
-
+    int temp_count = seat_taken_count;
+    pthread_mutex_unlock(&lock);
     // Return true if it's the same as seat_taken_count
-    return count == seat_taken_count;
+
+    return count == temp_count;
 }
 
 // ------------------- DO NOT MODIFY PAST THIS LINE -------------------
