@@ -1,5 +1,5 @@
 #ifndef BLOCK_H
-#define BLOCk_H
+#define BLOCK_H
 
 #define BLOCK_SIZE 4096
 

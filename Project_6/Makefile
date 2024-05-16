@@ -22,4 +22,4 @@ clean:
 	rm -f *.o
 
 pristine: clean
-	rm -f $(LIB) testfs
+	rm -f $(LIB) testfs image
