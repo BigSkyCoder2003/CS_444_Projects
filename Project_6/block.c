@@ -1,5 +1,6 @@
 #include "block.h"
 #include "image.h"
+#include "free.h"
 #include <stdio.h>
 #include <unistd.h>
 #include <sys/types.h>
@@ -16,4 +17,25 @@ void bwrite(int block_num, unsigned char *block)
 int offset = block_num * BLOCK_SIZE;
 lseek(image_fd, offset, SEEK_SET);
 write(image_fd, block, BLOCK_SIZE);
+}
+
+int alloc(void) {
+
+
+    unsigned char block_map[BLOCK_SIZE];
+
+    bread(BLOCK_MAP_BLOCK, block_map);
+
+    int free_data = find_free(block_map);
+
+    if (free_data == -1) {
+        return -1;
+    }
+
+    set_free(block_map, free_data, 0);
+
+    bwrite(block_map, INODE_MAP_BLOCK);
+
+    return free_data;
+
 }
