@@ -10,20 +10,20 @@
 int ialloc(void) {
 
 
-    unsigned char inode_map[INODE_MAP_BLOCK];
+    unsigned char inode_map[BLOCK_SIZE];
 
-    bread(BLOCK_SIZE, inode_map);
+    bread(INODE_MAP_BLOCK, inode_map);
 
     int free_inode = find_free(inode_map);
 
     if (free_inode == -1) {
-        return -1l
+        return -1;
     }
 
     set_free(inode_map, free_inode, 0);
 
     bwrite(inode_map, INODE_MAP_BLOCK);
-    
-    return inode_map;
+
+    return free_inode;
 
 }
