@@ -12,6 +12,16 @@ else
 
 }
 
+int find_low_clear_bit(unsigned char x)
+{
+    for (int i = 0; i < 8; i++)
+        if (!(x & (1 << i)))
+            return i;
+    
+    return -1;
+}
+
+
 int find_free(unsigned char *block){
   int zero_bit = -1;
   for(int i = 0; i< BLOCK_SIZE; i++)
@@ -21,13 +31,4 @@ int find_free(unsigned char *block){
   break;
   }
   return zero_bit;
-}
-
-int find_low_clear_bit(unsigned char x)
-{
-    for (int i = 0; i < 8; i++)
-        if (!(x & (1 << i)))
-            return i;
-    
-    return -1;
 }

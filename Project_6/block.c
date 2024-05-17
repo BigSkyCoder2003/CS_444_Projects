@@ -1,6 +1,6 @@
 #include "block.h"
 #include "image.h"
-#include "free.h"
+#include "free.c"
 #include <stdio.h>
 #include <unistd.h>
 #include <sys/types.h>
@@ -34,7 +34,7 @@ int alloc(void) {
 
     set_free(block_map, free_data, 0);
 
-    bwrite(block_map, INODE_MAP_BLOCK);
+    bwrite(BLOCK_MAP_BLOCK, block_map);
 
     return free_data;
 

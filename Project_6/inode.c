@@ -22,7 +22,7 @@ int ialloc(void) {
 
     set_free(inode_map, free_inode, 0);
 
-    bwrite(inode_map, INODE_MAP_BLOCK);
+    bwrite(INODE_MAP_BLOCK, inode_map);
 
     return free_inode;
 
