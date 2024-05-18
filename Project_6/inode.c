@@ -1,29 +1,27 @@
 #include "inode.h"
-#include "block.c"
-#include "free.c"
+#include "block.h"
+#include "free.h"
 #include <stdio.h>
 #include <unistd.h>
 #include <sys/types.h>
 
+unsigned char inode_map[BLOCK_SIZE];
 
+int ialloc(void)
+{
 
-int ialloc(void) {
+  bread(INODE_MAP_BLOCK, inode_map);
 
+  int free_inode = find_free(inode_map);
 
-    unsigned char inode_map[BLOCK_SIZE];
+  if (free_inode == -1)
+  {
+    return -1;
+  }
 
-    bread(INODE_MAP_BLOCK, inode_map);
+  set_free(inode_map, free_inode, 1);
 
-    int free_inode = find_free(inode_map);
+  bwrite(INODE_MAP_BLOCK, inode_map);
 
-    if (free_inode == -1) {
-        return -1;
-    }
-
-    set_free(inode_map, free_inode, 0);
-
-    bwrite(INODE_MAP_BLOCK, inode_map);
-
-    return free_inode;
-
+  return free_inode;
 }

@@ -2,24 +2,47 @@ CC = gcc
 AR = ar
 CFLAGS = -DCTEST_ENABLE -Wall -Wextra -g
 LIB = libvvsfs.a
-OBJS = block.o image.o testfs.o
-
+OBJS = block.o image.o inode.o free.o testfs.o
 all: $(LIB) testfs
-
 $(LIB): $(OBJS)
-	$(AR) rcs $@ $^
-
+		$(AR) rcs $@ $^
 %.o: %.c
-	$(CC) $(CFLAGS) -c $< -o $@
-
+		$(CC) $(CFLAGS) -c $< -o $@
 testfs: $(LIB)
-	$(CC) $(CFLAGS) -o $@ testfs.o $(LIB)
-
+		$(CC) $(CFLAGS) -o $@ testfs.o $(LIB)
 test: testfs
-	./testfs
-
+		./testfs
 clean:
-	rm -f *.o
-
+		rm -f *.o
 pristine: clean
-	rm -f $(LIB) testfs image
+		rm -f $(LIB) testfs testfs.exe image
+
+
+# CC = gcc
+# AR = ar
+# CFLAGS = -DCTEST_ENABLE -Wall -Wextra -g
+# LIB = libvvsfs.a
+# OBJS = block.o image.o testfs.o inode.o
+
+# all: $(LIB) testfs
+
+# $(LIB): $(OBJS)
+# 	$(AR) rcs $@ $^
+
+# %.o: %.c
+# 	$(CC) $(CFLAGS) -c $< -o $@
+
+# testfs: $(LIB)
+# 	$(CC) $(CFLAGS) -o $@ testfs.o $(LIB)
+
+# test: testfs
+# 	./testfs
+
+# clean:
+# 	rm -f *.o
+
+# pristine: clean
+# 	rm -f $(LIB) testfs testfs.exe image
+
+
+	
