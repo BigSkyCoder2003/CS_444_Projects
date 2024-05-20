@@ -79,6 +79,63 @@ void test_find_free(void)
   CTEST_ASSERT(zero_bit == 2, "checking if zero bit is found");
 }
 
+
+void test_iget(void)
+{
+  struct inode *in = iget(0);
+  printf("in->inode_num: %d\n", in->inode_num);
+
+  CTEST_ASSERT(in->inode_num == 0, "checking if inode number is correct");
+}
+
+void test_iput(void)
+{
+  struct inode *in = iget(0);
+
+  iput(in);
+  iput(in);
+
+  CTEST_ASSERT(in->ref_count == 0, "checking if inode ref count goes to 0");
+}
+
+void test_incore_find_free(void)
+{
+  struct inode *in = incore_find_free();
+
+  CTEST_ASSERT(in->ref_count == 0, "checking if free inode is found");
+}
+
+void test_incore_find(void)
+{
+  struct inode *in = incore_find(0);
+
+  CTEST_ASSERT(in->inode_num == 0, "checking if inode number is correct");
+}
+
+void test_incore_free_all(void)
+{
+  incore_free_all();
+
+  CTEST_ASSERT(inode_map[0] == 0, "checking if all inodes are freed");
+}
+
+void test_read_inode(void)
+{
+  struct inode in;
+  read_inode(&in, 0);
+
+  CTEST_ASSERT(in.inode_num == 0, "checking if inode number is correct");
+}
+
+void test_write_inode(void)
+{
+  struct inode in;
+  in.inode_num = 0;
+  write_inode(&in);
+
+  CTEST_ASSERT(in.inode_num == 0, "checking if inode number is correct");
+}
+
 int main(void)
 {
   image_open("image", 0);
@@ -90,6 +147,13 @@ int main(void)
   test_ialloc();
   test_set_free();
   test_find_free();
+  test_iget();
+  test_iput();
+  test_incore_find_free();
+  test_incore_find();
+  test_incore_free_all();
+  test_read_inode();
+  test_write_inode();
 
   CTEST_RESULTS();
 
