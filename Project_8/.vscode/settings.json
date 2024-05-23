@@ -1,6 +1,7 @@
 {
   "files.associations": {
     "*.embeddedhtml": "html",
-    "inode.h": "c"
+    "inode.h": "c",
+    "dir.h": "c"
   }
 }
