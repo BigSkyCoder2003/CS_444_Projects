@@ -1,4 +1,4 @@
-# Brandon Nelson & Daniel Lounsbury -- Project 6: Continuing the File System, managing free blocks
+# Brandon Nelson & Daniel Lounsbury -- Project 7: Continuing the File System, adding inode support
 
 ## Building
 
@@ -19,6 +19,8 @@ Command line:
 * `image.h`: Header file to image.c
 * `inode.c`: Contains the function ialloc()
 * `inode.h`: Header file to image.c
+* `pack.c`: Source file containing functions for reading and writing unsinged numbers of different bits/bytes
+* `pack.h`: Header file to pack.c, function headers for all of the pack read and write functions
 * `ctest.h`: A file for a lightweight C test framework suitable for this programs present functions
 * `libvvsfs.a`: Static Library for object files made during compilation
 * `Makefile`: used to compile the program to obtain executable and build object files
@@ -41,6 +43,11 @@ Command line:
 
     - free data block
 
+    - reference count to inodes within the in-core inode array
+
+    - inode structure with defined attributes found in inode.
+
+    - inode number indicating inode found on the block.
 
 
 ## Functions
@@ -63,6 +70,19 @@ Command line:
 
   * `*ialloc()*`: returns the first free inode located in the inode map.
 
+  * `*struct inode *incore_find_free(void)*`: finds the first free in-core inode in the incore array.
+
+  * `*struct inode *incore_find(unsigned int inode_num)*`: This finds an in-core inode record in the incore array by the inode number. It returns a pointer to that in-core inode or NULL if it can't be found
+
+  * `*void incore_free_all(void)*`: Sets all reference count numbers for all in-core inodes to 0
+
+  * `*void read_inode(struct inode *in, int inode_num)*`: A pointer goes to an empty inode to read data into it
+
+  * `*void write_inode(struct inode *in)*`: Stores the inode data pointed to by *in on the disk
+
+  * `*struct inode *iget(int inode_num)*`: Given an inode number, returns a pointer to correnspoinding in-core inode
+
+  * `*void iput(struct inode *in)*`: Frees an inode if it is not in use, decrementing the reference count to 0
 
 
 ## Notes
