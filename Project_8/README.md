@@ -1,4 +1,4 @@
-# Brandon Nelson & Daniel Lounsbury -- Project 6: Continuing the File System, managing free blocks
+# Brandon Nelson & Daniel Lounsbury -- Project 8:  Continuing the File System, adding directories
 
 ## Building
 
@@ -19,6 +19,8 @@ Command line:
 * `image.h`: Header file to image.c
 * `inode.c`: Contains the function ialloc()
 * `inode.h`: Header file to image.c
+* `dir.c`: Contains 3 functions, mkfs(), directory_get(), directory_open()
+* `dir.h`: Header file to dir.c; Includes definitions for directory and directory_entry structure
 * `ctest.h`: A file for a lightweight C test framework suitable for this programs present functions
 * `libvvsfs.a`: Static Library for object files made during compilation
 * `Makefile`: used to compile the program to obtain executable and build object files
@@ -40,6 +42,10 @@ Command line:
     - free inode
 
     - free data block
+
+    - directory structure with attributes of inode and an offset
+
+    - directory entry with attributes of it's inode number and name of file
 
 
 
@@ -63,6 +69,15 @@ Command line:
 
   * `*ialloc()*`: returns the first free inode located in the inode map.
 
+  * `*mkfs()*`: Creates the root directory by allocating memory space for the inode and free memory block before committing the root block .
+
+  * `*directory_open()*`: Returns the directory where the passed inode resides
+
+  * `*directory_get()*`: performs a read on a directory by taking a pointer to the directory obtained by directory_open() and also a pointer to a directory entry to fill in the directory information
+
+  * `*directory_close()*`: Closes a specified directory
+
+  * `*ls()*`: lists all files found in directory
 
 
 ## Notes
