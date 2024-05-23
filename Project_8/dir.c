@@ -1,9 +1,11 @@
 #include "dir.h"
 #include "inode.h"
 #include "pack.h"
+#include "block.h"
 #include <string.h>
 #include <stdio.h>
 #include <stdlib.h>
+
 
 
 void mkfs()
@@ -12,15 +14,16 @@ int free_inode = ialloc();
 int free_block = alloc();
 struct inode *root = iget(free_inode);
 
-root->flags = 2;
-root->size = 64;
+root->flags = IS_DIRECTORY;
+root->size = DIRECTORY_ENTRY_SIZE * 2;
 root->block_ptr[0] = free_block;
 
 unsigned char block[BLOCK_SIZE];
-write_u16(&block[0], free_inode);
-strcpy((char*)&block[2], ".");
-strcpy(&block[32], free_inode);
-strcpy((char*)&block[34], "..");
+
+write_u16(block, free_inode);
+strcpy((char*)block+DIRECTORY_NAME_OFFSET, ".");
+write_u16(block+DIRECTORY_ENTRY_SIZE, free_inode);
+strcpy((char*)block+DIRECTORY_ENTRY_SIZE+DIRECTORY_NAME_OFFSET, "..");
 
 bwrite(free_block, block);
 
@@ -44,8 +47,22 @@ struct directory *directory_open(int inode_num)
 int directory_get(struct directory *dir, struct directory_entry *ent)
 {
   if (dir->offset >= dir->inode->size)
+  {
     return -1;
-  
-  
+  }
 
+    unsigned int data_block_index = dir->offset / 4096;
+    unsigned int data_block_num = dir->inode->block_ptr[data_block_index];
+    char block[BLOCK_SIZE];
+    bread(data_block_num, (unsigned char*)block);
+    unsigned int entry_offset = dir->offset % 4096;
+    ent-> inode_num = read_u16(&block[entry_offset]);
+    strcpy(ent->name, &block[entry_offset + 2]);
+    return 0;
+}
+
+void directory_close(struct directory *dir)
+{
+  iput(dir->inode);
+  free(dir);
 }

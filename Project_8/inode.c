@@ -89,8 +89,7 @@ void read_inode(struct inode *in, int inode_num)
   for (int i = 0; i < INODE_PTR_COUNT; i++)
   {
     in->block_ptr[i] = read_u16(&block[block_offset_bytes + 9 + i * 2]);
-  
-}
+  }
   in->ref_count = 1;
   in->inode_num = inode_num;
 }

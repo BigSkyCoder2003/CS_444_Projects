@@ -6,6 +6,7 @@
 #include "ctest.h"
 #include "free.h"
 #include "inode.h"
+#include "dir.h"
 
 void test_bread(void)
 {
@@ -136,6 +137,18 @@ void test_write_inode(void)
   CTEST_ASSERT(in.inode_num == 0, "checking if inode number is correct");
 }
 
+void test_mkfs(void)
+{
+  mkfs();
+  struct inode *root = iget(0);
+
+  CTEST_ASSERT(root->flags == 2, "checking if flags are correct");
+  CTEST_ASSERT(root->size == 64, "checking if size is correct");
+  CTEST_ASSERT(root->block_ptr[0] == 1, "checking if block pointer is correct");
+
+  iput(root);
+}
+
 int main(void)
 {
   image_open("image", 0);
@@ -154,6 +167,7 @@ int main(void)
   test_incore_free_all();
   test_read_inode();
   test_write_inode();
+  test_mkfs();
 
   CTEST_RESULTS();
 

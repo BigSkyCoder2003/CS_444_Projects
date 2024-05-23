@@ -2,7 +2,7 @@ CC = gcc
 AR = ar
 CFLAGS = -DCTEST_ENABLE -Wall -Wextra -g
 LIB = libvvsfs.a
-OBJS = block.o image.o inode.o free.o testfs.o pack.o
+OBJS = block.o image.o inode.o free.o testfs.o pack.o ls.o dir.o
 all: $(LIB) testfs
 $(LIB): $(OBJS)
 		$(AR) rcs $@ $^
