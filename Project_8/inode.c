@@ -24,7 +24,6 @@ struct inode *ialloc(void)
   bread(INODE_MAP_BLOCK, inode_map);
 
   int free_inode = find_free(inode_map);
-  printf("free_inodetest: %d\n", free_inode);
 
   if (free_inode == -1)
   {

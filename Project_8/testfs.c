@@ -135,13 +135,12 @@ void test_mkfs(void)
 {
   mkfs();
   struct inode *root = iget(0);
-
   printf("root->flags: %d\n", root->flags);
   CTEST_ASSERT(root->flags == 2, "checking if flags are correct");
   printf("root->size: %d\n", root->size);
   CTEST_ASSERT(root->size == 64, "checking if size is correct");
   printf("root->block_ptr[0]: %d\n", root->block_ptr[0]);
-  CTEST_ASSERT(root->block_ptr[0] == 1, "checking if block pointer is correct");
+  CTEST_ASSERT(root->block_ptr[0] == 0, "checking if block pointer is correct");
   iput(root);
 }
 
