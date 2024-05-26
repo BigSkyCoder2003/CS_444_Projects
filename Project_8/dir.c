@@ -58,6 +58,8 @@ int directory_get(struct directory *dir, struct directory_entry *ent)
     unsigned int entry_offset = dir->offset % 4096;
     ent-> inode_num = read_u16(&block[entry_offset]);
     strcpy(ent->name, &block[entry_offset + 2]);
+
+    dir->offset += DIRECTORY_ENTRY_SIZE;
     return 0;
 }
 

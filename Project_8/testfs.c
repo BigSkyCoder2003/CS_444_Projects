@@ -144,6 +144,27 @@ void test_mkfs(void)
   iput(root);
 }
 
+void test_ls(void)
+{
+  struct directory *dir;
+  struct directory_entry ent;
+
+  dir = directory_open(0);
+  char teststr[100];
+
+  while (directory_get(dir, &ent) != -1)
+{
+    printf("%d %s ", ent.inode_num, ent.name);
+    strcat(teststr, ent.name);
+    strcat(teststr, " ");
+}
+  CTEST_ASSERT((strcmp(teststr, ". .. ") == 0), "checking if directory is opened");
+
+  directory_close(dir);
+
+}
+
+
 int main(void)
 {
   image_open("image", 1);
@@ -162,6 +183,7 @@ int main(void)
   test_read_inode();
   test_write_inode();
   test_mkfs();
+  test_ls();
 
   CTEST_RESULTS();
 
