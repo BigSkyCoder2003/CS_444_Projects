@@ -10,9 +10,9 @@
 
 void mkfs()
 {
-int free_inode = ialloc();
+struct inode *free_inode = ialloc();
 int free_block = alloc();
-struct inode *root = iget(free_inode);
+struct inode *root = iget(free_inode->inode_num);
 
 root->flags = IS_DIRECTORY;
 root->size = DIRECTORY_ENTRY_SIZE * DIRECTORY_ENTRY_COUNT;
@@ -20,9 +20,9 @@ root->block_ptr[0] = free_block;
 
 unsigned char block[BLOCK_SIZE];
 
-write_u16(block, free_inode);
+write_u16(block, free_inode->inode_num);
 strcpy((char*)block+DIRECTORY_NAME_OFFSET, ".");
-write_u16(block+DIRECTORY_ENTRY_SIZE, free_inode);
+write_u16(block+DIRECTORY_ENTRY_SIZE, free_inode->inode_num);
 strcpy((char*)block+DIRECTORY_ENTRY_SIZE+DIRECTORY_NAME_OFFSET, "..");
 
 bwrite(free_block, block);

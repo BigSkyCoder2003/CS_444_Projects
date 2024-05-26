@@ -44,15 +44,7 @@ struct inode *free_inode2 = ialloc();
   printf("free_inode1: %d\n", free_inode2->inode_num);
   CTEST_ASSERT(free_inode2->inode_num == 1, "checking if inode is allocated");
 
-  
-  // bwrite(INODE_MAP_BLOCK, inode_map);
-  for ( long unsigned int i = 0; i < sizeof(inode_map); i++)
-  {
-    if (inode_map[i] != 0)
-      printf("inode_map[%ld]: %d\n", i, inode_map[i]);
-  }
-  // set_free(inode_map, free_inode1, 0);
-  // set_free(inode_map, free_inode2, 0);
+  CTEST_ASSERT(inode_map[0] == 3, "checking if first byte in inode map contains 2 inodes");
 }
 
 void test_set_free(void)
@@ -92,15 +84,14 @@ void test_iget(void)
   printf("in->inode_num: %d\n", in->inode_num);
 
   CTEST_ASSERT(in->inode_num == 0, "checking if inode number is correct");
+  incore_free_all();
 }
 
 void test_iput(void)
 {
   struct inode *in = iget(0);
-
   iput(in);
-  iput(in);
-
+  printf("in->ref_count: %d\n", in->ref_count);
   CTEST_ASSERT(in->ref_count == 0, "checking if inode ref count goes to 0");
 }
 
@@ -159,19 +150,19 @@ int main(void)
   image_open("image", 1);
 
   CTEST_VERBOSE(1);
-  // test_bread();
-  // test_bwrite();
+  test_bread();
+  test_bwrite();
   test_ialloc();
-  // test_set_free();
-  // test_find_free();
-  // test_iget();
-  // test_iput();
-  // test_incore_find_free();
-  // test_incore_find();
-  // test_incore_free_all();
-  // test_read_inode();
-  // test_write_inode();
-  // test_mkfs();
+  test_set_free();
+  test_find_free();
+  test_iget();
+  test_iput();
+  test_incore_find_free();
+  test_incore_find();
+  test_incore_free_all();
+  test_read_inode();
+  test_write_inode();
+  test_mkfs();
 
   CTEST_RESULTS();
 
