@@ -22,7 +22,9 @@ struct inode {
 extern unsigned char inode_map[BLOCK_SIZE];
 
 
-int ialloc(void);
+
+
+struct inode *ialloc(void);
 void ifree(int inode_num);
 struct inode *incore_find_free(void);
 struct inode *incore_find(unsigned int inode_num);

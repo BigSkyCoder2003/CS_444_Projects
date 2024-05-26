@@ -15,7 +15,7 @@ int free_block = alloc();
 struct inode *root = iget(free_inode);
 
 root->flags = IS_DIRECTORY;
-root->size = DIRECTORY_ENTRY_SIZE * 2;
+root->size = DIRECTORY_ENTRY_SIZE * DIRECTORY_ENTRY_COUNT;
 root->block_ptr[0] = free_block;
 
 unsigned char block[BLOCK_SIZE];

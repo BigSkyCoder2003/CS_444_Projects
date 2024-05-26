@@ -5,6 +5,7 @@
 #define IS_DIRECTORY 2
 #define DIRECTORY_ENTRY_SIZE 32
 #define DIRECTORY_NAME_OFFSET 2
+#define DIRECTORY_ENTRY_COUNT 2
 
 struct directory {
     struct inode *inode;
