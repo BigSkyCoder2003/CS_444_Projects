@@ -77,5 +77,12 @@ return 0;
 
 struct inode *namei(char *path)
 {
-return NULL;
+if(strcmp(path, "/") == 0)
+{
+  return iget(ROOT_INODE_NUM);
+}
+else
+{
+  return NULL;
+}
 }
