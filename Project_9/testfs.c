@@ -164,6 +164,15 @@ void test_ls(void)
 
 }
 
+void test_directory_make(void)
+{
+
+}
+
+void test_namei(void)
+{
+
+}
 
 int main(void)
 {
