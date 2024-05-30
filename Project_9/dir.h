@@ -8,6 +8,7 @@
 #define DIRECTORY_ENTRY_COUNT 2
 #define ROOT_INODE_NUM 0
 #define MAX_PATH_SIZE 1024
+#define BLOCK_FREE_MAP_NUMBER 2
 
 struct directory {
     struct inode *inode;

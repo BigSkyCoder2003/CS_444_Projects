@@ -30,9 +30,10 @@ int find_free(unsigned char *block)
   {
     zero_bit = find_low_clear_bit(block[i]);
     if (zero_bit != -1)
-      break;
+        return i*8+ zero_bit;
+
   }
-  return zero_bit;
+  return -1;
   // for(int byte_num = 0; byte_num < BLOCK_SIZE; byte_num++)
   // {
   // int bit_num;

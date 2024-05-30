@@ -173,7 +173,15 @@ void test_directory_make(void)
 
   directory_make("/test");
   directory_make("/testw");
-
+  directory_make("/testwc");
+  directory_make("/testwce");
+  directory_make("/testwce");
+  directory_make("/testwce");
+  directory_make("/testwce");
+  directory_make("/testwce");
+  directory_make("/testwce");
+  directory_make("/testwce");
+  directory_make("/testwce");
   ls();
 
 

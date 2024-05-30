@@ -25,12 +25,13 @@ struct inode *ialloc(void)
   bread(INODE_MAP_BLOCK, inode_map);
 
   int free_inode = find_free(inode_map);
-
+  // printf("free_inode: %d\n", free_inode);
+  // printf("inode_map[0]: %d\n",inode_map[0]);
   if (free_inode == -1)
   {
     return NULL;
   }
-
+  
   struct inode *in = iget(free_inode);
 
   if (in == NULL)
@@ -39,6 +40,8 @@ struct inode *ialloc(void)
   }
 
   set_free(inode_map, free_inode, 1);
+    // printf("the second coming inode_map[0]: %d\n",inode_map[0]);
+
 
   in->size = 0;
   in->owner_id = 0;
@@ -133,7 +136,7 @@ void write_inode(struct inode *in)
     write_u16(&block[block_offset_bytes + 9 + i * 2], in->block_ptr[i]);
   }
 
-  bwrite(in->inode_num, block);
+  bwrite(block_num, block);
 }
 
 

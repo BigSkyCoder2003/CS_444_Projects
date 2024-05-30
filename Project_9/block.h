@@ -3,6 +3,8 @@
 
 #define BLOCK_SIZE 4096
 
+#define INODE_BLOCK_3 6
+
 unsigned char *bread(int block_num, unsigned char *block);
 
 void bwrite(int block_num, unsigned char *block);

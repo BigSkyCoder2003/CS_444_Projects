@@ -11,8 +11,16 @@
 
 void mkfs()
 {
+  unsigned char blocktemp[BLOCK_SIZE] = {0};
+  bwrite(INODE_BLOCK_3, blocktemp);
+  blocktemp[0] = 0x7f; //127 or 01111111
+  bwrite(BLOCK_FREE_MAP_NUMBER,blocktemp);
+  
+// puts("aa");
 struct inode *free_inode = ialloc();
+// puts("bb");
 int free_block = alloc();
+// printf("blockthiny%d \n", free_block);
 struct inode *root = iget(free_inode->inode_num);
 
 root->flags = IS_DIRECTORY;
