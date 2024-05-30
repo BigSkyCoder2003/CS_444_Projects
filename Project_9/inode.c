@@ -6,7 +6,6 @@
 #include <sys/types.h>
 #include "pack.h"
 
-unsigned char inode_map[BLOCK_SIZE];
 
 static struct inode incore[MAX_SYS_OPEN_FILES] = {0};
 
@@ -20,6 +19,8 @@ static struct inode incore[MAX_SYS_OPEN_FILES] = {0};
 
 struct inode *ialloc(void)
 {
+  unsigned char inode_map[BLOCK_SIZE];
+
 
   bread(INODE_MAP_BLOCK, inode_map);
 
@@ -51,6 +52,8 @@ struct inode *ialloc(void)
 
   write_inode(in);
 
+  bwrite(INODE_MAP_BLOCK, inode_map);
+  // printf("inode_num: %d\n", in->inode_num);
   return in;
 }
 
@@ -72,7 +75,7 @@ struct inode *incore_find(unsigned int inode_num)
 {
   for (int i = 0; i < MAX_SYS_OPEN_FILES; i++)
   {
-    if (incore[i].inode_num == inode_num)
+    if (incore[i].ref_count != 0 && incore[i].inode_num == inode_num)
     {
       return &incore[i];
     }
@@ -152,9 +155,8 @@ struct inode *iget(int inode_num)
   }
 
   read_inode(in, inode_num);
-  in->ref_count = 1;
+  in->ref_count++;
   in->inode_num = inode_num;
-
   return in;
 }
 

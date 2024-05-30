@@ -19,7 +19,7 @@ struct inode {
     unsigned int inode_num;  // in-core only
 };
 
-extern unsigned char inode_map[BLOCK_SIZE];
+// extern unsigned char inode_map[BLOCK_SIZE];
 
 
 

@@ -5,7 +5,7 @@
 #include <unistd.h>
 #include <sys/types.h>
 
-unsigned char block_map[BLOCK_SIZE];
+
 
 unsigned char *bread(int block_num, unsigned char *block)
 {
@@ -24,6 +24,8 @@ void bwrite(int block_num, unsigned char *block)
 int alloc(void)
 {
 
+  unsigned char block_map[BLOCK_SIZE];
+
   bread(BLOCK_MAP_BLOCK, block_map);
 
   int free_data = find_free(block_map);
@@ -33,7 +35,7 @@ int alloc(void)
     return -1;
   }
 
-  set_free(block_map, free_data, 0);
+  set_free(block_map, free_data,1);
 
   bwrite(BLOCK_MAP_BLOCK, block_map);
 

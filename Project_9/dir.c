@@ -2,6 +2,7 @@
 #include "inode.h"
 #include "pack.h"
 #include "block.h"
+#include "dirbasename.c"
 #include <string.h>
 #include <stdio.h>
 #include <stdlib.h>
@@ -51,13 +52,13 @@ int directory_get(struct directory *dir, struct directory_entry *ent)
     return -1;
   }
 
-    unsigned int data_block_index = dir->offset / 4096;
+    unsigned int data_block_index = dir->offset / BLOCK_SIZE;
     unsigned int data_block_num = dir->inode->block_ptr[data_block_index];
     char block[BLOCK_SIZE];
     bread(data_block_num, (unsigned char*)block);
-    unsigned int entry_offset = dir->offset % 4096;
+    unsigned int entry_offset = dir->offset % BLOCK_SIZE;
     ent-> inode_num = read_u16(&block[entry_offset]);
-    strcpy(ent->name, &block[entry_offset + 2]);
+    strcpy(ent->name, &block[entry_offset + DIRECTORY_NAME_OFFSET]);
 
     dir->offset += DIRECTORY_ENTRY_SIZE;
     return 0;
@@ -72,8 +73,57 @@ void directory_close(struct directory *dir)
 
 int directory_make(char *path)
 {
-return 0;
+  char dirname[MAX_PATH_SIZE];
+  char basename[MAX_PATH_SIZE];
+  get_dirname(path, dirname);
+  get_basename(path, basename);
+  // printf("dirname: %s\n", dirname);
+  // printf("basename: %s\n", basename);
+  struct inode *parent_inode = namei(dirname);
+  if (parent_inode == NULL || !(parent_inode->flags & IS_DIRECTORY))
+  {
+    return -1; // Parent directory doesn't exist or is not a directory
+  }
+
+  struct inode *new_inode = ialloc();
+  printf("new_inode->inode_num: %d\n", new_inode->inode_num);
+  int new_block = alloc();
+  printf("new_block: %d\n", new_block);
+  struct inode *new_directory = iget(new_inode->inode_num);
+
+  new_directory->flags = IS_DIRECTORY;
+  new_directory->size = DIRECTORY_ENTRY_SIZE * DIRECTORY_ENTRY_COUNT;
+  new_directory->block_ptr[0] = new_block;
+
+  unsigned char block[BLOCK_SIZE];
+  
+  write_u16(block, new_inode->inode_num);
+  strcpy((char*)block+DIRECTORY_NAME_OFFSET, ";.");
+
+  write_u16(block+DIRECTORY_ENTRY_SIZE, parent_inode->inode_num);
+  strcpy((char*)block+DIRECTORY_ENTRY_SIZE+DIRECTORY_NAME_OFFSET, ".;.");
+
+  bwrite(new_block, block);
+
+  int parent_block_index = parent_inode->size / BLOCK_SIZE;
+  int parent_block_num = parent_inode->block_ptr[parent_block_index];
+
+  unsigned char *parent_block = bread(parent_block_num, block);
+
+  write_u16(parent_block + parent_inode->size % BLOCK_SIZE, new_inode->inode_num);
+  strcpy((char*)parent_block + parent_inode->size % BLOCK_SIZE + DIRECTORY_NAME_OFFSET, basename);
+
+  bwrite(parent_block_num, parent_block);
+
+  parent_inode->size += DIRECTORY_ENTRY_SIZE;
+
+  iput(new_inode);
+  iput(parent_inode);
+
+  return 0;
 }
+
+
 
 struct inode *namei(char *path)
 {

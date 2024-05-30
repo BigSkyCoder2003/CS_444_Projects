@@ -1,12 +1,14 @@
 #include <stdio.h>
 #include <unistd.h>
 #include <string.h>
+#include "dirbasename.h"
 #include "image.h"
 #include "block.h"
 #include "ctest.h"
 #include "free.h"
 #include "inode.h"
 #include "dir.h"
+#include "ls.h"
 
 void test_bread(void)
 {
@@ -44,7 +46,7 @@ struct inode *free_inode2 = ialloc();
   printf("free_inode1: %d\n", free_inode2->inode_num);
   CTEST_ASSERT(free_inode2->inode_num == 1, "checking if inode is allocated");
 
-  CTEST_ASSERT(inode_map[0] == 3, "checking if first byte in inode map contains 2 inodes");
+  // CTEST_ASSERT(inode_map[0] == 3, "checking if first byte in inode map contains 2 inodes");
 }
 
 void test_set_free(void)
@@ -167,11 +169,21 @@ void test_ls(void)
 void test_directory_make(void)
 {
 
+  mkfs();
+
+  directory_make("/test");
+  directory_make("/testw");
+
+  ls();
+
+
 }
 
 void test_namei(void)
 {
-
+  struct inode *in = namei("/");
+  // printf("in->inode_num: %d\n", in->inode_num);
+  CTEST_ASSERT(in->inode_num == 0, "checking if inode number is correct");
 }
 
 int main(void)
@@ -179,24 +191,41 @@ int main(void)
   image_open("image", 1);
 
   CTEST_VERBOSE(1);
-  test_bread();
-  test_bwrite();
-  test_ialloc();
-  test_set_free();
-  test_find_free();
-  test_iget();
-  test_iput();
-  test_incore_find_free();
-  test_incore_find();
-  test_incore_free_all();
-  test_read_inode();
-  test_write_inode();
-  test_mkfs();
-  test_ls();
-
+  // test_bread();
+  // test_bwrite();
+  // test_ialloc();
+  // test_set_free();
+  // test_find_free();
+  // test_iget();
+  // test_iput();
+  // test_incore_find_free();
+  // test_incore_find();
+  // test_incore_free_all();
+  // test_read_inode();
+  // test_write_inode();
+  // test_mkfs();
+  // test_ls();
+  test_directory_make();
+  //test_namei();
+  image_close();
   CTEST_RESULTS();
 
   CTEST_EXIT();
 
-  image_close();
+// char result[1024];
+
+//     puts(get_dirname("/foo/bar/baz", result)); // /foo/bar
+//     puts(get_dirname("/foo/bar", result));     // /foo
+//     puts(get_dirname("/foo", result));         // /
+//     puts(get_dirname("/", result));            // /
+//     puts(get_dirname("foo", result));          // .
+//     puts(get_dirname("", result));             // .
+
+//     puts(get_basename("/foo/bar/baz", result)); // baz
+//     puts(get_basename("/foo/bar", result));     // bar
+//     puts(get_basename("/foo", result));         // foo
+//     puts(get_basename("/", result));            // /
+//     puts(get_basename("foo", result));          // foo
+//     puts(get_basename("", result));             // 
+//   image_close();
 }

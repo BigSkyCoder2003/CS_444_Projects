@@ -2,7 +2,7 @@ CC = gcc
 AR = ar
 CFLAGS = -DCTEST_ENABLE -Wall -Wextra -g
 LIB = libvvsfs.a
-OBJS = block.o image.o inode.o free.o testfs.o pack.o ls.o dir.o
+OBJS = block.o image.o inode.o free.o testfs.o pack.o ls.o dir.o dirbasename.o
 all: $(LIB) testfs
 $(LIB): $(OBJS)
 		$(AR) rcs $@ $^
@@ -15,7 +15,7 @@ test: testfs
 clean:
 		rm -f *.o
 pristine: clean
-		rm -f $(LIB) testfs testfs.exe image
+		rm -f $(LIB) testfs testfs.exe image dirbasename
 
 
 # CC = gcc
