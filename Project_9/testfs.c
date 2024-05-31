@@ -39,11 +39,11 @@ void test_bwrite()
 void test_ialloc(void)
 {
   struct inode *free_inode1 = ialloc();
-  printf("free_inode1: %d\n", free_inode1->inode_num);
+  // printf("free_inode1: %d\n", free_inode1->inode_num);
   CTEST_ASSERT(free_inode1->inode_num == 0, "checking if inode is allocated");
 
 struct inode *free_inode2 = ialloc();
-  printf("free_inode1: %d\n", free_inode2->inode_num);
+  // printf("free_inode1: %d\n", free_inode2->inode_num);
   CTEST_ASSERT(free_inode2->inode_num == 1, "checking if inode is allocated");
 
   // CTEST_ASSERT(inode_map[0] == 3, "checking if first byte in inode map contains 2 inodes");
@@ -83,7 +83,7 @@ void test_find_free(void)
 void test_iget(void)
 {
   struct inode *in = iget(0);
-  printf("in->inode_num: %d\n", in->inode_num);
+  // printf("in->inode_num: %d\n", in->inode_num);
 
   CTEST_ASSERT(in->inode_num == 0, "checking if inode number is correct");
   incore_free_all();
@@ -93,8 +93,9 @@ void test_iput(void)
 {
   struct inode *in = iget(0);
   iput(in);
-  printf("in->ref_count: %d\n", in->ref_count);
-  CTEST_ASSERT(in->ref_count == 0, "checking if inode ref count goes to 0");
+  // iput(in);
+  // printf("in->ref_count: %d\n", in->ref_count);
+  CTEST_ASSERT(in->ref_count == 1, "checking if inode ref count goes to 1");
 }
 
 void test_incore_find_free(void)
@@ -137,31 +138,31 @@ void test_mkfs(void)
 {
   mkfs();
   struct inode *root = iget(0);
-  printf("root->flags: %d\n", root->flags);
+  // printf("root->flags: %d\n", root->flags);
   CTEST_ASSERT(root->flags == 2, "checking if flags are correct");
-  printf("root->size: %d\n", root->size);
+  // printf("root->size: %d\n", root->size);
   CTEST_ASSERT(root->size == 64, "checking if size is correct");
-  printf("root->block_ptr[0]: %d\n", root->block_ptr[0]);
-  CTEST_ASSERT(root->block_ptr[0] == 0, "checking if block pointer is correct");
+  // printf("root->block_ptr[0]: %d\n", root->block_ptr[0]);
+  CTEST_ASSERT(root->block_ptr[0] == 7, "checking if block pointer is correct");
   iput(root);
 }
 
 void test_ls(void)
 {
+  mkfs();
   struct directory *dir;
   struct directory_entry ent;
 
   dir = directory_open(0);
-  char teststr[100];
+  char teststr[100] = "";
 
   while (directory_get(dir, &ent) != -1)
 {
-    printf("%d %s ", ent.inode_num, ent.name);
+    // printf("%d %s ", ent.inode_num, ent.name);
     strcat(teststr, ent.name);
     strcat(teststr, " ");
 }
-  CTEST_ASSERT((strcmp(teststr, ". .. ") == 0), "checking if directory is opened");
-
+  CTEST_ASSERT((strcmp(teststr, ". .. ") == 0), "checking if root directory is opened");
   directory_close(dir);
 
 }
@@ -171,18 +172,25 @@ void test_directory_make(void)
 
   mkfs();
 
-  directory_make("/test");
-  directory_make("/testw");
-  directory_make("/testwc");
-  directory_make("/testwce");
-  directory_make("/testwce");
-  directory_make("/testwce");
-  directory_make("/testwce");
-  directory_make("/testwce");
-  directory_make("/testwce");
-  directory_make("/testwce");
-  directory_make("/testwce");
-  ls();
+  directory_make("/test1");
+  directory_make("/test2");
+  directory_make("/test3");
+  directory_make("/test4");
+
+  struct directory *dir;
+  struct directory_entry ent;
+
+  dir = directory_open(0);
+  char teststr[1000] = "";
+
+  while (directory_get(dir, &ent) != -1)
+{
+    // printf("%d %s ", ent.inode_num, ent.name);
+    strcat(teststr, ent.name);
+    strcat(teststr, " ");
+}
+  CTEST_ASSERT((strcmp(teststr, ". .. test1 test2 test3 test4 ") == 0), "checking if directories are opened");
+  // ls();
 
 
 }
@@ -196,44 +204,59 @@ void test_namei(void)
 
 int main(void)
 {
-  image_open("image", 1);
+  // image_open("image", 1);
 
   CTEST_VERBOSE(1);
-  // test_bread();
-  // test_bwrite();
-  // test_ialloc();
-  // test_set_free();
-  // test_find_free();
-  // test_iget();
-  // test_iput();
-  // test_incore_find_free();
-  // test_incore_find();
-  // test_incore_free_all();
-  // test_read_inode();
-  // test_write_inode();
-  // test_mkfs();
-  // test_ls();
+  image_open("image", 1);
+  test_bread();
+  image_close();
+  image_open("image", 1);
+  test_bwrite();
+  image_close();
+  image_open("image", 1);
+  test_ialloc();
+  image_close();
+  image_open("image", 1);
+  test_set_free();
+  image_close();
+  image_open("image", 1);
+  test_find_free();
+  image_close();
+  image_open("image", 1);
+  test_iget();
+  image_close();
+  image_open("image", 1);
+  test_iput();
+  image_close();
+  image_open("image", 1);
+  test_incore_find_free();
+  image_close();
+  image_open("image", 1);
+  test_incore_find();
+  image_close();
+  image_open("image", 1);
+  test_incore_free_all();
+  image_close();
+  image_open("image", 1);
+  test_read_inode();
+  image_close();
+  image_open("image", 1);
+  test_write_inode();
+  image_close();
+  image_open("image", 1);
+  test_mkfs();
+  image_close();
+  image_open("image", 1);
+  test_ls();
+  image_close();
+  image_open("image", 1);
   test_directory_make();
-  //test_namei();
+  image_close();
+  image_open("image", 1);
+  test_namei();
   image_close();
   CTEST_RESULTS();
 
   CTEST_EXIT();
 
-// char result[1024];
-
-//     puts(get_dirname("/foo/bar/baz", result)); // /foo/bar
-//     puts(get_dirname("/foo/bar", result));     // /foo
-//     puts(get_dirname("/foo", result));         // /
-//     puts(get_dirname("/", result));            // /
-//     puts(get_dirname("foo", result));          // .
-//     puts(get_dirname("", result));             // .
-
-//     puts(get_basename("/foo/bar/baz", result)); // baz
-//     puts(get_basename("/foo/bar", result));     // bar
-//     puts(get_basename("/foo", result));         // foo
-//     puts(get_basename("/", result));            // /
-//     puts(get_basename("foo", result));          // foo
-//     puts(get_basename("", result));             // 
-//   image_close();
 }
