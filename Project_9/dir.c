@@ -94,9 +94,9 @@ int directory_make(char *path)
   }
 
   struct inode *new_inode = ialloc();
-  printf("new_inode->inode_num: %d\n", new_inode->inode_num);
+  //printf("new_inode->inode_num: %d\n", new_inode->inode_num);
   int new_block = alloc();
-  printf("new_block: %d\n", new_block);
+  //printf("new_block: %d\n", new_block);
   struct inode *new_directory = iget(new_inode->inode_num);
 
   new_directory->flags = IS_DIRECTORY;
