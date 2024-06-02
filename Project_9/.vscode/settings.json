@@ -5,5 +5,8 @@
     "dir.h": "c",
     "block.h": "c",
     "string.h": "c"
-  }
+    
+  },
+  "editor.formatOnSave": true
+  
 }

@@ -9,41 +9,43 @@
 
 char *get_dirname(const char *path, char *dirname)
 {
-    strcpy(dirname, path);
+  strcpy(dirname, path);
 
-    char *p = strrchr(dirname, '/');
+  char *p = strrchr(dirname, '/');
 
-    if (p == NULL) {
-        strcpy(dirname, ".");
-        return dirname;
-    }
-
-    if (p == dirname)  // Last slash is the root /
-        *(p+1) = '\0';
-
-    else
-        *p = '\0';  // Last slash is not the root /
-
+  if (p == NULL)
+  {
+    strcpy(dirname, ".");
     return dirname;
+  }
+
+  if (p == dirname) // Last slash is the root /
+    *(p + 1) = '\0';
+
+  else
+    *p = '\0'; // Last slash is not the root /
+
+  return dirname;
 }
 
 char *get_basename(const char *path, char *basename)
 {
-    if (strcmp(path, "/") == 0) {
-        strcpy(basename, path);
-        return basename;
-    }
-
-    const char *p = strrchr(path, '/');
-
-    if (p == NULL)
-        p = path;   // No slash in name, start at beginning
-    else
-        p++;        // Start just after slash
-
-    strcpy(basename, p);
-
+  if (strcmp(path, "/") == 0)
+  {
+    strcpy(basename, path);
     return basename;
+  }
+
+  const char *p = strrchr(path, '/');
+
+  if (p == NULL)
+    p = path; // No slash in name, start at beginning
+  else
+    p++; // Start just after slash
+
+  strcpy(basename, p);
+
+  return basename;
 }
 
 // int main(void)
@@ -62,7 +64,5 @@ char *get_basename(const char *path, char *basename)
 //     puts(get_basename("/foo", result));         // foo
 //     puts(get_basename("/", result));            // /
 //     puts(get_basename("foo", result));          // foo
-//     puts(get_basename("", result));             // 
+//     puts(get_basename("", result));             //
 // }
-
-

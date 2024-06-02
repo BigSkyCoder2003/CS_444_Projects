@@ -6,7 +6,6 @@
 #include <sys/types.h>
 #include "pack.h"
 
-
 static struct inode incore[MAX_SYS_OPEN_FILES] = {0};
 
 #define BLOCK_SIZE 4096
@@ -15,23 +14,19 @@ static struct inode incore[MAX_SYS_OPEN_FILES] = {0};
 
 #define INODES_PER_BLOCK (BLOCK_SIZE / INODE_SIZE)
 
-
-
 struct inode *ialloc(void)
 {
   unsigned char inode_map[BLOCK_SIZE];
 
-
   bread(INODE_MAP_BLOCK, inode_map);
 
   int free_inode = find_free(inode_map);
-  // printf("free_inode: %d\n", free_inode);
-  // printf("inode_map[0]: %d\n",inode_map[0]);
+
   if (free_inode == -1)
   {
     return NULL;
   }
-  
+
   struct inode *in = iget(free_inode);
 
   if (in == NULL)
@@ -40,8 +35,6 @@ struct inode *ialloc(void)
   }
 
   set_free(inode_map, free_inode, 1);
-    // printf("the second coming inode_map[0]: %d\n",inode_map[0]);
-
 
   in->size = 0;
   in->owner_id = 0;
@@ -56,10 +49,8 @@ struct inode *ialloc(void)
   write_inode(in);
 
   bwrite(INODE_MAP_BLOCK, inode_map);
-  // printf("inode_num: %d\n", in->inode_num);
   return in;
 }
-
 
 struct inode *incore_find_free(void)
 {
@@ -108,7 +99,7 @@ void read_inode(struct inode *in, int inode_num)
   in->permissions = read_u8(&block[block_offset_bytes + 6]);
   in->flags = read_u8(&block[block_offset_bytes + 7]);
   in->link_count = read_u8(&block[block_offset_bytes + 8]);
-  
+
   for (int i = 0; i < INODE_PTR_COUNT; i++)
   {
     in->block_ptr[i] = read_u16(&block[block_offset_bytes + 9 + i * 2]);
@@ -116,7 +107,6 @@ void read_inode(struct inode *in, int inode_num)
   in->ref_count = 1;
   in->inode_num = inode_num;
 }
-
 
 void write_inode(struct inode *in)
 {
@@ -138,7 +128,6 @@ void write_inode(struct inode *in)
 
   bwrite(block_num, block);
 }
-
 
 struct inode *iget(int inode_num)
 {

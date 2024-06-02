@@ -1,7 +1,6 @@
 #ifndef FREE_H
 #define FREE_H
 
-
 #define INODE_MAP_BLOCK 1
 #define BLOCK_MAP_BLOCK 2
 

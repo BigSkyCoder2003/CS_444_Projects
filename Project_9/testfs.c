@@ -42,7 +42,7 @@ void test_ialloc(void)
   // printf("free_inode1: %d\n", free_inode1->inode_num);
   CTEST_ASSERT(free_inode1->inode_num == 0, "checking if inode is allocated");
 
-struct inode *free_inode2 = ialloc();
+  struct inode *free_inode2 = ialloc();
   // printf("free_inode1: %d\n", free_inode2->inode_num);
   CTEST_ASSERT(free_inode2->inode_num == 1, "checking if inode is allocated");
 
@@ -114,7 +114,6 @@ void test_incore_find(void)
 
 void test_incore_free_all(void)
 {
-  
 }
 
 void test_read_inode(void)
@@ -157,14 +156,13 @@ void test_ls(void)
   char teststr[100] = "";
 
   while (directory_get(dir, &ent) != -1)
-{
+  {
     // printf("%d %s ", ent.inode_num, ent.name);
     strcat(teststr, ent.name);
     strcat(teststr, " ");
-}
+  }
   CTEST_ASSERT((strcmp(teststr, ". .. ") == 0), "checking if root directory is opened");
   directory_close(dir);
-
 }
 
 void test_directory_make(void)
@@ -184,15 +182,13 @@ void test_directory_make(void)
   char teststr[1000] = "";
 
   while (directory_get(dir, &ent) != -1)
-{
+  {
     // printf("%d %s ", ent.inode_num, ent.name);
     strcat(teststr, ent.name);
     strcat(teststr, " ");
-}
+  }
   CTEST_ASSERT((strcmp(teststr, ". .. test1 test2 test3 test4 ") == 0), "checking if directories are opened");
   // ls();
-
-
 }
 
 void test_namei(void)
@@ -258,5 +254,4 @@ int main(void)
   CTEST_RESULTS();
 
   CTEST_EXIT();
-
 }

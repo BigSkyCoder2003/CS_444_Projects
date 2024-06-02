@@ -5,13 +5,11 @@
 #include <unistd.h>
 #include <sys/types.h>
 
-
-
 unsigned char *bread(int block_num, unsigned char *block)
 {
   int offset = block_num * BLOCK_SIZE;
   lseek(image_fd, offset, SEEK_SET);
-  /*int n = */read(image_fd, block, BLOCK_SIZE);
+  /*int n = */ read(image_fd, block, BLOCK_SIZE);
   // printf("n: %d\n", n);
   return block;
 }
@@ -27,7 +25,6 @@ int alloc(void)
 {
   unsigned char block_map[BLOCK_SIZE];
 
-
   bread(BLOCK_MAP_BLOCK, block_map);
 
   int free_data = find_free(block_map);
@@ -38,7 +35,7 @@ int alloc(void)
     return -1;
   }
 
-  set_free(block_map, free_data,1);
+  set_free(block_map, free_data, 1);
 
   bwrite(BLOCK_MAP_BLOCK, block_map);
 
