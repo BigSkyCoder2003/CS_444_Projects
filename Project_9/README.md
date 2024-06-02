@@ -1,4 +1,4 @@
-# Brandon Nelson & Daniel Lounsbury -- Project 8:  Continuing the File System, adding directories
+# Brandon Nelson & Daniel Lounsbury -- Project 9:  Continuing the File System, mkdir and namei
 
 ## Building
 
@@ -23,8 +23,8 @@ Command line:
 * `pack.h`: Header file to pack.c
 * `free.c`: file with functions used to find and mark free bits in the inode and block map
 * `free.h`: Header file to free.c
-* `dirbasename.c`: 
-* `dirbasename.h`: 
+* `dirbasename.c`: Home to helper functions for getting the directory name and basename of a provided file path, used for making a new directory
+* `dirbasename.h`: Header file to dirbasename.c
 * `dir.c`: Contains 3 functions, mkfs(), directory_get(), directory_open()
 * `dir.h`: Header file to dir.c; Includes definitions for directory and directory_entry structure
 * `ctest.h`: A file for a lightweight C test framework suitable for this programs present functions
@@ -59,19 +59,23 @@ Command line:
 
 * `main()`Executes the main function of the program. Handles command line parsing. 
 
+
+  ### block.h
+
   * `*unsigned char *bread(int block_num, unsigned char *block)*`: Takes a pointer to a buffer to load with the block data. It copies it out of the disk image into that buffer. It also returns a pointer to that same buffer.
 
   * `*void bwrite(int block_num, unsigned char *block)`: function takes a pointer to a buffer full of block data to write.
 
-  * `*void test_bread()*`: Test function to call CTEST_ASSERT on bread().
-
-  * `*void test_bwrite()*`: Test function to call CTEST_ASSERT on bwrite().
+  * `*int alloc(void)*`: returns the first free data block found in the block map.
+  
+  ### image.h
 
   * `*int image_open(char *filename, int truncate)*`: Creates a file using open(), optionally sets truncate file, returns image file descriptor.
 
   * `*int image_close(void)*`: Closes image file descriptor.
 
-  * `*int alloc(void)*`: returns the first free data block found in the block map.
+  ### inode.h
+
 
   * `*struct inode *ialloc(void)*`: returns the first free inode located in the inode map.
 
@@ -91,6 +95,8 @@ Command line:
 
   * `*void iput(struct inode *in)*`: decrement the reference count on the inode. If it falls to 0, write the inode to disk. Esssentialy frees an inode if it is not in use.
 
+  ### pack.h
+
   * `*unsinged int read_u32(void *addr)*`: Reads data in block sizes of 4 bytes.
 
   * `*unsigned short read_u16(void *addr)*`: Reads data in block sizes of 2 bytes.
@@ -103,9 +109,13 @@ Command line:
 
   * `*void write_u8(void *addr, unsigned char value)*`: Writes data to a block size of 1 byte.
 
+  ### free.h
+
   * `*void set_free(unsigned char *block, int num, int set)*`:  set a specific bit to the value in set (0 or 1).
 
   * `*int find_free(unsigned char *block)*`: find a 0 bit and return its index (i.e. the block number that corresponds to this bit).
+
+  ### dir.h
 
   * `*void mkfs()*`: Creates the root directory by allocating memory space for the inode and free memory block before committing the root block.
 
@@ -119,8 +129,9 @@ Command line:
 
   * `*void directory_close(struct directory *dir)*`: Closes a specified directory.
 
+
+  ### ls.h
+
   * `*void ls(void)*`: lists all files found in directory.
 
-
-## Notes
 
